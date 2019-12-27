@@ -22,7 +22,7 @@ RUN apt-get update; \
     libavutil-dev libavformat-dev libavcodec-dev libevent-dev libcups2-dev libpapi-dev \
     gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf \
     qemu-user-static debootstrap whiptail bsdtar bc device-tree-compiler \
-	swig python-dev python3-dev liblz4-tool
+    cmake swig python-dev python3-dev liblz4-tool
 
 RUN echo "root:fa" | chpasswd
 USER root
