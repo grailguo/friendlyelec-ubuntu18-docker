@@ -22,7 +22,7 @@ RUN apt-get update; \
     libavutil-dev libavformat-dev libavcodec-dev libevent-dev libcups2-dev libpapi-dev \
     gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf \
     qemu-user-static debootstrap whiptail bsdtar bc device-tree-compiler \
-    cmake swig python-dev python3-dev liblz4-tool
+    cmake swig python-dev python3-dev liblz4-tool libsqlite3-dev libusb-1.0-0-dev libfftw3-dev
 
 RUN echo "root:fa" | chpasswd
 USER root
@@ -30,19 +30,17 @@ USER root
 # install friendlyarm-toolchain
 COPY ./toolchain/gcc-x64 /gcc-x64
 RUN echo "> install friendlyarm-toolchain"; \
-	mkdir -p /opt/FriendlyARM/toolchain/; \
-	bsdtar xf /gcc-x64/arm-cortexa9-linux-gnueabihf-4.9.3.tar.xz -C /opt/FriendlyARM/toolchain/; \
-	bsdtar xf /gcc-x64/aarch64-cortexa53-linux-gnu-6.4.tar.xz -C /opt/FriendlyARM/toolchain/; \
+    cat /gcc-x64/toolchain-4.9.3-armhf.tar.gz* | tar xz -C /; \
+    cat /gcc-x64/toolchain-6.4-aarch64.tar.gz* | tar xz -C /; \
 	rm -rf /gcc-x64;
 
-# install qt-sdk
-
-COPY ./files/qtsdk-friendlyelec/rk3399 /qtsdk-friendlyelec/rk3399
-RUN if [ -d /qtsdk-friendlyelec/rk3399 ]; then echo "> install QtSDK for rk3399"; \
-    cd /qtsdk-friendlyelec/rk3399/; \
-	chmod 755 install.sh; \
-	sed -e 's/exec tar/exec bsdtar/g' ./install.sh -i; \
-	./install.sh; \
-	rm -rf /qtsdk-friendlyelec; fi
+# RUN mkdir /qtsdk-friendlyelec/
+# COPY ./files/qtsdk-friendlyelec/rk3399 /qtsdk-friendlyelec/
+# RUN if [ -d /qtsdk-friendlyelec/rk3399 ]; then echo "> install QtSDK for rk3399"; \
+#     cd /qtsdk-friendlyelec/rk3399/; \
+# 	chmod 755 install.sh; \
+# 	sed -e 's/exec tar/exec bsdtar/g' ./install.sh -i; \
+# 	./install.sh; \
+# 	rm -rf /qtsdk-friendlyelec; fi
 
 RUN echo "all done."
